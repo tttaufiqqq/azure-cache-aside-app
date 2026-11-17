@@ -4,7 +4,7 @@ This article shows how to deploy the app and watch the cache-aside pattern work.
 
 ## Before you begin
 
-Deploy the `cache-aside-infra` repository first. The deployment named `cache-aside` must exist in the resource group.
+Deploy the [cache-aside-infra](https://github.com/tttaufiqqq/azure-cache-aside-infra-architecture) repository first. The deployment named `cache-aside` must exist in the resource group.
 
 ## Deploy the app with Bash
 

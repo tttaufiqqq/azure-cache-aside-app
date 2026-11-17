@@ -1,6 +1,6 @@
 # Architecture
 
-This article explains how the app implements the cache-aside pattern. For the Azure resources, see the `cache-aside-infra` repository.
+This article explains how the app implements the cache-aside pattern. For the Azure resources, see the [cache-aside-infra](https://github.com/tttaufiqqq/azure-cache-aside-infra-architecture) repository.
 
 ## Code map
 

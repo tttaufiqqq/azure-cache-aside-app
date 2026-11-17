@@ -4,7 +4,7 @@ This log records how the web app was built, deployed, and tested on 17 November 
 
 ## Goal
 
-Build the smallest app that shows the cache-aside pattern from the [Azure Architecture Center article](https://learn.microsoft.com/en-us/azure/architecture/databases/architecture/cache-aside-azure-managed-redis-postgresql) running on the infrastructure from the `cache-aside-infra` repository.
+Build the smallest app that shows the cache-aside pattern from the [Azure Architecture Center article](https://learn.microsoft.com/en-us/azure/architecture/databases/architecture/cache-aside-azure-managed-redis-postgresql) running on the infrastructure from the [cache-aside-infra](https://github.com/tttaufiqqq/azure-cache-aside-infra-architecture) repository.
 
 ## Decisions
 

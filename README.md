@@ -5,7 +5,7 @@ This is a learning project. It is a small Node.js API that implements the cache-
 > [!NOTE]
 > This is a personal learning implementation. It is not official Microsoft guidance.
 
-This repository contains the web app. The Azure infrastructure lives in a separate repository, `cache-aside-infra`. Deploy that repository first.
+This repository contains the web app. The Azure infrastructure lives in a separate repository, [cache-aside-infra](https://github.com/tttaufiqqq/azure-cache-aside-infra-architecture). Deploy that repository first.
 
 ![Architecture diagram of the cache-aside pattern with Azure Managed Redis and Azure Database for PostgreSQL](diagrams/architecture.png)
 
@@ -34,7 +34,7 @@ The app has no frontend. You test it with `curl`.
 
 ## Prerequisites
 
-- The `cache-aside-infra` deployment is running.
+- The [cache-aside-infra](https://github.com/tttaufiqqq/azure-cache-aside-infra-architecture) deployment is running.
 - [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli), signed in to the same subscription.
 - Bash only: `zip` installed on your computer. PowerShell uses the built-in `tar` instead.
 - Optional, for load testing: [k6](https://grafana.com/docs/k6/latest/set-up/install-k6/)
@@ -198,7 +198,7 @@ k6 run -e BASE_URL=https://<your-app>.azurewebsites.net loadtests/read-heavy.js
 
 ## Related resources
 
-- `cache-aside-infra`: the infrastructure repository
+- [cache-aside-infra](https://github.com/tttaufiqqq/azure-cache-aside-infra-architecture): the infrastructure repository
 - [Architecture](docs/architecture.md)
 - [Load testing with k6](docs/load-testing.md)
 - [Implementation log](docs/implementation-log.md)
