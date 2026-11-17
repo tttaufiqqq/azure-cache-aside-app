@@ -6,9 +6,9 @@ This article shows how to deploy the app and watch the cache-aside pattern work.
 
 Deploy the `cache-aside-infra` repository first. The deployment named `cache-aside` must exist in the resource group.
 
-## Deploy the app
+## Deploy the app with Bash
 
-Run the deploy script from the repository root.
+Run the deploy script from the repository root in Git Bash or WSL. It needs `zip`.
 
 ```bash
 ./scripts/deploy.sh
@@ -26,21 +26,34 @@ You can override the resource group with an environment variable.
 RESOURCE_GROUP=my-rg ./scripts/deploy.sh
 ```
 
+## Deploy the app with PowerShell
+
+PowerShell has no `zip` command, so use the built-in `tar`. The `-a` option writes forward-slash paths that Linux App Service needs.
+
+```powershell
+$RG = "rg-cache-aside-lab"
+$APP = az deployment group show -g $RG -n cache-aside --query properties.outputs.appName.value -o tsv
+tar -a -c -f app.zip src package.json package-lock.json
+az webapp deploy --resource-group $RG --name $APP --src-path app.zip --type zip
+```
+
+> [!NOTE]
+> Don't use `Compress-Archive` here. Some versions write backslash paths that break the deployment on Linux.
+
 ## Check that the app is ready
 
 Get the app URL.
 
-```bash
-APP_URL=$(az deployment group show \
-  --resource-group rg-cache-aside-lab \
-  --name cache-aside \
-  --query properties.outputs.appUrl.value -o tsv)
+```powershell
+$APP_URL = az deployment group show -g $RG -n cache-aside --query properties.outputs.appUrl.value -o tsv
 ```
+
+In Bash, use `APP_URL=$(az deployment group show ... -o tsv)` with the same arguments.
 
 Check the health endpoint.
 
-```bash
-curl "$APP_URL/health"
+```powershell
+curl.exe "$APP_URL/health"
 ```
 
 Wait until the response shows `"schemaReady":true`. The first start can take a few minutes.
@@ -49,37 +62,39 @@ Wait until the response shows `"schemaReady":true`. The first start can take a f
 
 1. Read a product twice.
 
-   ```bash
-   curl -i "$APP_URL/products/1"
-   curl -i "$APP_URL/products/1"
+   ```powershell
+   curl.exe -i "$APP_URL/products/1"
+   curl.exe -i "$APP_URL/products/1"
    ```
 
    The first response has `X-Cache: MISS`. The second has `X-Cache: HIT`.
 
 1. Update the product.
 
-   ```bash
-   curl -i -X PUT "$APP_URL/products/1" \
-     -H "content-type: application/json" \
-     -d '{"priceCents": 500}'
+   ```powershell
+   curl.exe -i -X PUT "$APP_URL/products/1" -H "content-type: application/json" -d '{\"priceCents\": 500}'
    ```
 
-   The response has `X-Cache-Invalidated: true`.
+   The response has an `x-cache-invalidated: true` header. In Bash, use `-d '{"priceCents": 500}'` without the backslashes.
 
 1. Read the product again.
 
-   ```bash
-   curl -i "$APP_URL/products/1"
+   ```powershell
+   curl.exe -i "$APP_URL/products/1"
    ```
 
    The response has `X-Cache: MISS` and the new price.
 
 1. Check the counters.
 
-   ```bash
-   curl "$APP_URL/stats"
+   ```powershell
+   curl.exe "$APP_URL/stats"
    ```
+
+## Run a load test
+
+After the pattern works, measure it under load. See [Load testing with k6](load-testing.md).
 
 ## Redeploy
 
-Run `./scripts/deploy.sh` again after any code change. After you destroy and recreate the infrastructure, deploy the app again.
+Deploy again after any code change. After you destroy and recreate the infrastructure, deploy the app again.
