@@ -13,5 +13,5 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools\ocr-shots.ps1 -Fol
 ## Conventions
 
 - Rename screenshots to numbered descriptive names that sort chronologically, e.g. `01-create-resource.png`, `02-deploy-complete.png`.
-- Every `README.md` must reference every image in its `screenshots/` folder with a one-line caption.
+- Every `README.md` must reference every image in its `screenshots/` folder with a one-line caption on the line directly below the image.
 - Keep sensitive values (subscription IDs, tenant IDs, emails, public IPs) out of filenames and captions.

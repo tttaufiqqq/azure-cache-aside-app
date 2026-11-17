@@ -101,9 +101,15 @@ The first response has `X-Cache: MISS`. The second has `X-Cache: HIT`. For the f
 
 ![Azure CLI output showing the web app deployment completed successfully](screenshots/01-deploy-succeeded.png)
 
+*Azure CLI output: the web app deployment completed successfully.*
+
 ![curl to the root path returning 404 because the app has no root route](screenshots/02-root-404.png)
 
+*curl to the root path returns 404 because the app has no root route.*
+
 ![Terminal output of the health endpoint showing schemaReady true](screenshots/03-health.png)
+
+*The health endpoint reports `schemaReady: true`.*
 
 The `schemaReady: true` response shows that the app reached PostgreSQL through the private endpoint with its managed identity and created its own schema.
 
@@ -111,9 +117,13 @@ The `schemaReady: true` response shows that the app reached PostgreSQL through t
 
 ![Two curl responses for the same product, the first with X-Cache MISS and the second with X-Cache HIT](screenshots/04-cache-miss-hit.png)
 
+*Two reads of the same product: first `X-Cache: MISS`, then `X-Cache: HIT`.*
+
 ### Write path: invalidation
 
 ![A PUT response with x-cache-invalidated true, followed by a read that returns X-Cache MISS and the new price](screenshots/05-write-invalidation.png)
+
+*A PUT returns `x-cache-invalidated: true`, and the next read misses with the new price.*
 
 After the update, the next read misses because the write deleted the cached key. That read refills the cache with the new price.
 
@@ -121,7 +131,11 @@ After the update, the next read misses because the write deleted the cached key.
 
 ![The stats endpoint showing hits, misses, database reads, and database writes](screenshots/06-stats.png)
 
+*The stats endpoint: 1 hit, 2 misses, 2 database reads, and 1 database write.*
+
 ![Live log stream of the app showing structured request logs](screenshots/07-log-tail.png)
+
+*The live log stream shows structured request logs.*
 
 The counters add up. Two database reads, one write, and one hit match the requests in the screenshots above.
 
@@ -129,7 +143,11 @@ The counters add up. Two database reads, one write, and one hit match the reques
 
 ![k6 summary showing cache hit and miss latency, a 94.46% hit rate, and all thresholds passed](screenshots/08-k6-results.png)
 
+*k6 summary: cache hit and miss latency, a 94.46% hit rate, and all thresholds passed.*
+
 ![k6 totals showing 100% of 5,604 checks passed across 2,876 requests](screenshots/09-k6-checks.png)
+
+*k6 totals: 100% of 5,604 checks passed across 2,876 requests.*
 
 The test ran from a laptop in Malaysia against the app in Malaysia West. It used 10 virtual users for 75 seconds, about 95% reads and 5% writes. All four thresholds passed.
 
