@@ -11,7 +11,7 @@ This repository contains the web app. The Azure infrastructure lives in a separa
 
 Diagram adapted from the [Azure Architecture Center](https://learn.microsoft.com/en-us/azure/architecture/databases/architecture/cache-aside-azure-managed-redis-postgresql).
 
-## Learning goals
+## 1. Learning goals
 
 - Implement the read path and write path of the cache-aside pattern in code.
 - Handle cache failures without failing requests.
@@ -19,7 +19,7 @@ Diagram adapted from the [Azure Architecture Center](https://learn.microsoft.com
 - Observe cache hits and misses with a response header and counters.
 - Measure the effect of the cache with a k6 load test.
 
-## Stack
+## 2. Stack
 
 | Layer | Choice |
 |---|---|
@@ -32,7 +32,7 @@ Diagram adapted from the [Azure Architecture Center](https://learn.microsoft.com
 
 The app has no frontend. You test it with `curl`.
 
-## Prerequisites
+## 3. Prerequisites
 
 - The [cache-aside-infra](https://github.com/tttaufiqqq/azure-cache-aside-infra-architecture) deployment is running.
 - [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli), signed in to the same subscription.
@@ -42,9 +42,9 @@ The app has no frontend. You test it with `curl`.
 > [!NOTE]
 > You can't run the app on your computer. Redis and PostgreSQL accept only private traffic, so the app works only inside Azure.
 
-## Quickstart
+## 4. Quickstart
 
-### Bash (Git Bash or WSL)
+### 4.1 Bash (Git Bash or WSL)
 
 1. Deploy the app.
 
@@ -64,7 +64,7 @@ The app has no frontend. You test it with `curl`.
    curl -i "$APP_URL/products/1"
    ```
 
-### PowerShell
+### 4.2 PowerShell
 
 1. Package and deploy the app.
 
@@ -85,7 +85,7 @@ The app has no frontend. You test it with `curl`.
 
 The first response has `X-Cache: MISS`. The second has `X-Cache: HIT`. For the full walkthrough, see [Deploy and test](docs/deploy.md).
 
-## Endpoints
+## 5. Endpoints
 
 | Method and path | Description |
 |---|---|
@@ -95,9 +95,9 @@ The first response has `X-Cache: MISS`. The second has `X-Cache: HIT`. For the f
 | `PUT /products/:id` | Updates a product, then invalidates its cache key |
 | `GET /stats` | Returns hit, miss, and failure counters |
 
-## Results
+## 6. Results
 
-### Deployment and health
+### 6.1 Deployment and health
 
 <img src="screenshots/01-deploy-succeeded.png" alt="Azure CLI output showing the web app deployment completed successfully" style="border: 1px solid #d0d7de; border-radius: 6px;">
 
@@ -113,13 +113,13 @@ The first response has `X-Cache: MISS`. The second has `X-Cache: HIT`. For the f
 
 The `schemaReady: true` response shows that the app reached PostgreSQL through the private endpoint with its managed identity and created its own schema.
 
-### Read path: miss, then hit
+### 6.2 Read path: miss, then hit
 
 <img src="screenshots/04-cache-miss-hit.png" alt="Two curl responses for the same product, the first with X-Cache MISS and the second with X-Cache HIT" style="border: 1px solid #d0d7de; border-radius: 6px;">
 
 *Two reads of the same product: first `X-Cache: MISS`, then `X-Cache: HIT`.*
 
-### Write path: invalidation
+### 6.3 Write path: invalidation
 
 <img src="screenshots/05-write-invalidation.png" alt="A PUT response with x-cache-invalidated true, followed by a read that returns X-Cache MISS and the new price" style="border: 1px solid #d0d7de; border-radius: 6px;">
 
@@ -127,7 +127,7 @@ The `schemaReady: true` response shows that the app reached PostgreSQL through t
 
 After the update, the next read misses because the write deleted the cached key. That read refills the cache with the new price.
 
-### Counters and logs
+### 6.4 Counters and logs
 
 <img src="screenshots/06-stats.png" alt="The stats endpoint showing hits, misses, database reads, and database writes" style="border: 1px solid #d0d7de; border-radius: 6px;">
 
@@ -139,7 +139,7 @@ After the update, the next read misses because the write deleted the cached key.
 
 The counters add up. Two database reads, one write, and one hit match the requests in the screenshots above.
 
-### Load test
+### 6.5 Load test
 
 <img src="screenshots/08-k6-results.png" alt="k6 summary showing cache hit and miss latency, a 94.46% hit rate, and all thresholds passed" style="border: 1px solid #d0d7de; border-radius: 6px;">
 
@@ -169,7 +169,7 @@ The misses match the design. The 144 writes each deleted a cached key, so the ne
 
 For how to run the test and read the results, see [Load testing with k6](docs/load-testing.md).
 
-## Load testing
+## 7. Load testing
 
 The `loadtests/read-heavy.js` script sends mostly reads with a few writes and reports latency separately for cache hits and misses.
 
@@ -177,7 +177,7 @@ The `loadtests/read-heavy.js` script sends mostly reads with a few writes and re
 k6 run -e BASE_URL=https://<your-app>.azurewebsites.net loadtests/read-heavy.js
 ```
 
-## Differences from the reference architecture
+## 8. Differences from the reference architecture
 
 | Reference architecture | This project | Reason |
 |---|---|---|
@@ -186,7 +186,7 @@ k6 run -e BASE_URL=https://<your-app>.azurewebsites.net loadtests/read-heavy.js
 | Negative caching for missing rows | Not cached | Keeps the rules simple |
 | Application Insights instrumentation | Structured console logs only | Avoids another dependency |
 
-## What I learned
+## 9. What I learned
 
 - Cache hits were faster than misses, but not dramatically. The median was 23.6 ms for hits and 30.3 ms for misses. Both include the network round trip from my laptop, and the miss path is only a single-row primary key lookup.
 - The hit rate follows the write rate. With 144 writes in the run, about 150 reads missed because each write deletes a key.
@@ -196,7 +196,7 @@ k6 run -e BASE_URL=https://<your-app>.azurewebsites.net loadtests/read-heavy.js
 - Concurrent misses for one key can share a single database query.
 - In PowerShell, use `curl.exe` instead of `curl`, and escape the quotes inside JSON bodies.
 
-## Related resources
+## 10. Related resources
 
 - [cache-aside-infra](https://github.com/tttaufiqqq/azure-cache-aside-infra-architecture): the infrastructure repository
 - [Architecture](docs/architecture.md)

@@ -2,7 +2,7 @@
 
 This article explains how the app implements the cache-aside pattern. For the Azure resources, see the [cache-aside-infra](https://github.com/tttaufiqqq/azure-cache-aside-infra-architecture) repository.
 
-## Code map
+## 1. Code map
 
 | File | Responsibility |
 |---|---|
@@ -16,7 +16,7 @@ This article explains how the app implements the cache-aside pattern. For the Az
 
 All cache rules live in `cache.js` and `products.js`, so you can change them in one place.
 
-## Read path
+## 2. Read path
 
 `GET /products/:id` follows these steps:
 
@@ -27,7 +27,7 @@ All cache rules live in `cache.js` and `products.js`, so you can change them in 
 
 Concurrent misses for the same key share one database query.
 
-## Write path
+## 3. Write path
 
 `PUT /products/:id` follows these steps:
 
@@ -37,7 +37,7 @@ Concurrent misses for the same key share one database query.
 
 If both deletes fail, the commit still stands. The response sets `X-Cache-Invalidated: false`, and the TTL limits how long the stale value lives.
 
-## Cache rules
+## 4. Cache rules
 
 | Rule | Value |
 |---|---|
@@ -47,7 +47,7 @@ If both deletes fail, the commit still stands. The response sets `X-Cache-Invali
 | Offline behavior | Commands fail fast and reads fall back to PostgreSQL |
 | Missing rows | Not cached |
 
-## Authentication
+## 5. Authentication
 
 The app uses the user-assigned managed identity that the infrastructure creates.
 
@@ -56,11 +56,11 @@ The app uses the user-assigned managed identity that the infrastructure creates.
 
 No password or key is stored anywhere.
 
-## Startup
+## 6. Startup
 
 The server starts first, then runs `schema.sql` in the background and retries until PostgreSQL is reachable. `GET /health` reports `schemaReady`.
 
-## Observability
+## 7. Observability
 
 The app writes structured JSON logs to the console. App Service sends them to Log Analytics.
 

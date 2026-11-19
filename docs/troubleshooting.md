@@ -2,7 +2,7 @@
 
 This article lists common problems and how to resolve them.
 
-## View the app logs
+## 1. View the app logs
 
 Stream the console logs.
 
@@ -14,7 +14,7 @@ az webapp log tail \
 
 You can also query the `AppServiceConsoleLogs` table in Log Analytics.
 
-## The health endpoint shows `schemaReady: false`
+## 2. The health endpoint shows `schemaReady: false`
 
 **Symptom:** `GET /health` keeps returning `"schemaReady":false`.
 
@@ -24,7 +24,7 @@ You can also query the `AppServiceConsoleLogs` table in Log Analytics.
 - An authentication error means the managed identity isn't a PostgreSQL Entra administrator.
 - A certificate error means Node doesn't trust the server certificate chain. Check the error text before you change TLS settings.
 
-## Every response has `X-Cache: BYPASS`
+## 3. Every response has `X-Cache: BYPASS`
 
 **Symptom:** The app works but never caches.
 
@@ -34,13 +34,13 @@ You can also query the `AppServiceConsoleLogs` table in Log Analytics.
 - Confirm that the identity has the `default` data access policy on the Redis database.
 - Confirm that the Redis private DNS zone is linked to the virtual network.
 
-## Every response is `MISS` and never `HIT`
+## 4. Every response is `MISS` and never `HIT`
 
 **Symptom:** The cache is reachable but values don't stay.
 
 **Fix:** Check `CACHE_TTL_SECONDS`. A very small value expires keys before the next request. Also check `fillFailures` in `GET /stats`.
 
-## The app returns 502 or 503 after deployment
+## 5. The app returns 502 or 503 after deployment
 
 **Symptom:** The site doesn't respond after you deploy.
 
@@ -50,7 +50,7 @@ You can also query the `AppServiceConsoleLogs` table in Log Analytics.
 1. Check the logs for a `Missing required environment variable` error.
 1. Wait a minute and retry. The health check can delay traffic to a new instance.
 
-## A write returns `X-Cache-Invalidated: false`
+## 6. A write returns `X-Cache-Invalidated: false`
 
 **Symptom:** The update succeeded but Redis couldn't delete the key.
 

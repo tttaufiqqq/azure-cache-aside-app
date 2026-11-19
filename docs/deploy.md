@@ -2,11 +2,11 @@
 
 This article shows how to deploy the app and watch the cache-aside pattern work.
 
-## Before you begin
+## 1. Before you begin
 
 Deploy the [cache-aside-infra](https://github.com/tttaufiqqq/azure-cache-aside-infra-architecture) repository first. The deployment named `cache-aside` must exist in the resource group.
 
-## Deploy the app with Bash
+## 2. Deploy the app with Bash
 
 Run the deploy script from the repository root in Git Bash or WSL. It needs `zip`.
 
@@ -26,7 +26,7 @@ You can override the resource group with an environment variable.
 RESOURCE_GROUP=my-rg ./scripts/deploy.sh
 ```
 
-## Deploy the app with PowerShell
+## 3. Deploy the app with PowerShell
 
 PowerShell has no `zip` command, so use the built-in `tar`. The `-a` option writes forward-slash paths that Linux App Service needs.
 
@@ -40,7 +40,7 @@ az webapp deploy --resource-group $RG --name $APP --src-path app.zip --type zip
 > [!NOTE]
 > Don't use `Compress-Archive` here. Some versions write backslash paths that break the deployment on Linux.
 
-## Check that the app is ready
+## 4. Check that the app is ready
 
 Get the app URL.
 
@@ -58,7 +58,7 @@ curl.exe "$APP_URL/health"
 
 Wait until the response shows `"schemaReady":true`. The first start can take a few minutes.
 
-## Test the pattern
+## 5. Test the pattern
 
 1. Read a product twice.
 
@@ -91,10 +91,10 @@ Wait until the response shows `"schemaReady":true`. The first start can take a f
    curl.exe "$APP_URL/stats"
    ```
 
-## Run a load test
+## 6. Run a load test
 
 After the pattern works, measure it under load. See [Load testing with k6](load-testing.md).
 
-## Redeploy
+## 7. Redeploy
 
 Deploy again after any code change. After you destroy and recreate the infrastructure, deploy the app again.

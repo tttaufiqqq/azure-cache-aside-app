@@ -2,11 +2,11 @@
 
 This log records how the web app was built, deployed, and tested on 17 November 2026. It lists what happened, what was verified, and why each decision was made.
 
-## Goal
+## 1. Goal
 
 Build the smallest app that shows the cache-aside pattern from the [Azure Architecture Center article](https://learn.microsoft.com/en-us/azure/architecture/databases/architecture/cache-aside-azure-managed-redis-postgresql) running on the infrastructure from the [cache-aside-infra](https://github.com/tttaufiqqq/azure-cache-aside-infra-architecture) repository.
 
-## Decisions
+## 2. Decisions
 
 | Decision | Choice | Reason |
 |---|---|---|
@@ -22,7 +22,7 @@ Build the smallest app that shows the cache-aside pattern from the [Azure Archit
 | Packaging in PowerShell | `tar -a`, not `Compress-Archive` | `tar` writes forward-slash paths that Linux App Service needs |
 | Load testing | k6 | JavaScript scripts, and no extra Azure resources |
 
-## Timeline
+## 3. Timeline
 
 | Step | What happened | Result |
 |---|---|---|
@@ -39,7 +39,7 @@ Build the smallest app that shows the cache-aside pattern from the [Azure Archit
 | 11 | Wrote the k6 script and checked it against a local mock server | Hit and miss latency were recorded separately, and the thresholds and the missing-`BASE_URL` error behaved as designed |
 | 12 | Ran the k6 test against the deployed app with 10 virtual users for 75 seconds | All thresholds passed: 2,876 requests, 0% failed, and a 94.46% hit rate |
 
-## What was verified
+## 4. What was verified
 
 | Check | Evidence |
 |---|---|
@@ -53,7 +53,7 @@ Build the smallest app that shows the cache-aside pattern from the [Azure Archit
 | The stampede guard shares queries | 146 database reads for 153 reads that weren't hits, so seven reads shared a running query |
 | A cache read failure falls back to PostgreSQL | One bypassed read returned 200 in 377 ms, and `cacheReadErrors` showed 1 |
 
-## Notes
+## 5. Notes
 
 - `GET /` returns 404 because the app has no root route. The routes are `/health`, `/products`, `/products/:id`, and `/stats`.
 - Application Insights is not instrumented. The infrastructure creates the resource, but the app sends only structured console logs to Log Analytics.
@@ -61,7 +61,7 @@ Build the smallest app that shows the cache-aside pattern from the [Azure Archit
 - The latency numbers include the round trip from a laptop to Azure, so only compare hits and misses within the same run.
 - The cause of the single bypassed read wasn't investigated. The app logs a `cache_read_error` event for each one.
 
-## Related resources
+## 6. Related resources
 
 - [Deploy and test](deploy.md)
 - [Load testing with k6](load-testing.md)
