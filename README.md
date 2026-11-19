@@ -7,7 +7,7 @@ This is a learning project. It is a small Node.js API that implements the cache-
 
 This repository contains the web app. The Azure infrastructure lives in a separate repository, [cache-aside-infra](https://github.com/tttaufiqqq/azure-cache-aside-infra-architecture). Deploy that repository first.
 
-![Architecture diagram of the cache-aside pattern with Azure Managed Redis and Azure Database for PostgreSQL](diagrams/architecture.png)
+<img src="diagrams/architecture.png" alt="Architecture diagram of the cache-aside pattern with Azure Managed Redis and Azure Database for PostgreSQL" style="border: 1px solid #d0d7de; border-radius: 6px;">
 
 Diagram adapted from the [Azure Architecture Center](https://learn.microsoft.com/en-us/azure/architecture/databases/architecture/cache-aside-azure-managed-redis-postgresql).
 
@@ -99,15 +99,15 @@ The first response has `X-Cache: MISS`. The second has `X-Cache: HIT`. For the f
 
 ### Deployment and health
 
-![Azure CLI output showing the web app deployment completed successfully](screenshots/01-deploy-succeeded.png)
+<img src="screenshots/01-deploy-succeeded.png" alt="Azure CLI output showing the web app deployment completed successfully" style="border: 1px solid #d0d7de; border-radius: 6px;">
 
 *Azure CLI output: the web app deployment completed successfully.*
 
-![curl to the root path returning 404 because the app has no root route](screenshots/02-root-404.png)
+<img src="screenshots/02-root-404.png" alt="curl to the root path returning 404 because the app has no root route" style="border: 1px solid #d0d7de; border-radius: 6px;">
 
 *curl to the root path returns 404 because the app has no root route.*
 
-![Terminal output of the health endpoint showing schemaReady true](screenshots/03-health.png)
+<img src="screenshots/03-health.png" alt="Terminal output of the health endpoint showing schemaReady true" style="border: 1px solid #d0d7de; border-radius: 6px;">
 
 *The health endpoint reports `schemaReady: true`.*
 
@@ -115,13 +115,13 @@ The `schemaReady: true` response shows that the app reached PostgreSQL through t
 
 ### Read path: miss, then hit
 
-![Two curl responses for the same product, the first with X-Cache MISS and the second with X-Cache HIT](screenshots/04-cache-miss-hit.png)
+<img src="screenshots/04-cache-miss-hit.png" alt="Two curl responses for the same product, the first with X-Cache MISS and the second with X-Cache HIT" style="border: 1px solid #d0d7de; border-radius: 6px;">
 
 *Two reads of the same product: first `X-Cache: MISS`, then `X-Cache: HIT`.*
 
 ### Write path: invalidation
 
-![A PUT response with x-cache-invalidated true, followed by a read that returns X-Cache MISS and the new price](screenshots/05-write-invalidation.png)
+<img src="screenshots/05-write-invalidation.png" alt="A PUT response with x-cache-invalidated true, followed by a read that returns X-Cache MISS and the new price" style="border: 1px solid #d0d7de; border-radius: 6px;">
 
 *A PUT returns `x-cache-invalidated: true`, and the next read misses with the new price.*
 
@@ -129,11 +129,11 @@ After the update, the next read misses because the write deleted the cached key.
 
 ### Counters and logs
 
-![The stats endpoint showing hits, misses, database reads, and database writes](screenshots/06-stats.png)
+<img src="screenshots/06-stats.png" alt="The stats endpoint showing hits, misses, database reads, and database writes" style="border: 1px solid #d0d7de; border-radius: 6px;">
 
 *The stats endpoint: 1 hit, 2 misses, 2 database reads, and 1 database write.*
 
-![Live log stream of the app showing structured request logs](screenshots/07-log-tail.png)
+<img src="screenshots/07-log-tail.png" alt="Live log stream of the app showing structured request logs" style="border: 1px solid #d0d7de; border-radius: 6px;">
 
 *The live log stream shows structured request logs.*
 
@@ -141,11 +141,11 @@ The counters add up. Two database reads, one write, and one hit match the reques
 
 ### Load test
 
-![k6 summary showing cache hit and miss latency, a 94.46% hit rate, and all thresholds passed](screenshots/08-k6-results.png)
+<img src="screenshots/08-k6-results.png" alt="k6 summary showing cache hit and miss latency, a 94.46% hit rate, and all thresholds passed" style="border: 1px solid #d0d7de; border-radius: 6px;">
 
 *k6 summary: cache hit and miss latency, a 94.46% hit rate, and all thresholds passed.*
 
-![k6 totals showing 100% of 5,604 checks passed across 2,876 requests](screenshots/09-k6-checks.png)
+<img src="screenshots/09-k6-checks.png" alt="k6 totals showing 100% of 5,604 checks passed across 2,876 requests" style="border: 1px solid #d0d7de; border-radius: 6px;">
 
 *k6 totals: 100% of 5,604 checks passed across 2,876 requests.*
 
